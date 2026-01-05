@@ -1,0 +1,5 @@
+Total frames: 509
+Network nodes: 68
+Network edges: 83
+Reaction types: 64
+Total reaction events: 70

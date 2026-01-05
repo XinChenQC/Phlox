@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  phlox:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: phlox:latest
+    container_name: phlox-analysis
+    volumes:
+      - ./data:/data
+      - ./output:/output
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: analyze /data/input.conf --output /output
+    # Optionally limit resources
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '4'
+    #       memory: 8G
