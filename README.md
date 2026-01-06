@@ -7,19 +7,19 @@ Phlox (formerly ReaxANA/CPX-MechGen) analyzes reactive molecular dynamics simula
 ## Development Status
 
 **Current Implementation Stage:**
-- ✅ **Fragment Analysis**: Complete - Molecular fragmentation detection and tracking fully implemented
-- ⚠️ **Network Filters**: In Progress - Oscillation removal and node contraction currently disabled
-- 🚧 **Reaction Classification**: Partial - Core classification framework in place, some methods pending
+-  **Fragment Analysis**: Complete - Molecular fragmentation detection and tracking fully implemented
+-  **Network Filters**: In Progress - Oscillation removal and node contraction currently disabled
+-  **Reaction Classification**: Partial - Core classification framework in place, some methods pending
 
 ## Features
 
-- 🔬 **Trajectory Analysis**: Process XYZ and LAMMPS trajectory files
-- 🧬 **Molecular Tracking**: Automatic fragmentation detection with PBC support
-- 📊 **Reaction Networks**: Build directed graphs of chemical reactions
-- 🚀 **Parallel Processing**: Multi-core support for large trajectories
-- ⚗️ **Catalyst Support**: Track catalytic species separately
-- 📈 **Time Series**: Species abundance evolution over simulation time
-- 🎨 **Visualization**: Generate molecular structures and reaction graphs
+-  **Trajectory Analysis**: Process XYZ and LAMMPS trajectory files
+-  **Molecular Tracking**: Automatic fragmentation detection with PBC support
+-  **Reaction Networks**: Build directed graphs of chemical reactions
+-  **Parallel Processing**: Multi-core support for large trajectories
+-  **Catalyst Support**: Track catalytic species separately
+-  **Time Series**: Species abundance evolution over simulation time
+-  **Visualization**: Generate molecular structures and reaction graphs
 
 ## Installation
 
