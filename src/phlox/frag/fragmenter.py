@@ -45,6 +45,9 @@ class Fragmenter:
         self.global_dist_mat = None
         self.global_mask_mat = None
 
+        # Store atoms across frames to preserve neighbor lists
+        self.atoms = None
+
     def initialize_mask_matrix(self, atoms: List[Atom]):
         """
         Initialize global bond distance mask matrix.
@@ -94,6 +97,8 @@ class Fragmenter:
         """
         start_time = time.time()
 
+        # Store atoms for reuse across frames
+        self.atoms = atoms
         n_atoms = len(atoms)
 
         # Extract positions
@@ -118,7 +123,7 @@ class Fragmenter:
         # Build connectivity mask (atoms bonded)
         link_mat = self.global_dist_mat < self.global_mask_mat
 
-        # Update atom neighbor lists
+        # Update atom neighbor lists (only store j < i to avoid duplication)
         for i in range(n_atoms):
             link_mat[i][i] = False
             atoms[i].clear_neighbors()
@@ -159,13 +164,20 @@ class Fragmenter:
         Ported from buildDistMart() in tool.py (lines 247-279)
 
         Args:
-            atoms: List of Atom objects with neighbor lists already set
+            atoms: List of Atom objects with new positions
             pbc_box: PBC box dimensions
 
         Returns:
             List of Molecule objects
         """
         start_time = time.time()
+
+        # Update stored atoms with new positions
+        if self.atoms is None:
+            raise RuntimeError("Atoms not initialized. Call identify_molecules_initial() first.")
+
+        for i, atom in enumerate(atoms):
+            self.atoms[i].position = atom.position
 
         # Update distances only for neighbors
         if pbc_box is not None:
@@ -176,17 +188,15 @@ class Fragmenter:
             )
         else:
             box_size = None
-
-        for idx, atom in enumerate(atoms):
+        for idx, atom in enumerate(self.atoms):
             if not atom.neighbors:
                 continue
 
             # Get neighbor positions
-            neighbor_positions = np.array([atoms[j].position for j in atom.neighbors], dtype=np.float32)
+            neighbor_positions = np.array([self.atoms[j].position for j in atom.neighbors], dtype=np.float32)
 
             # Calculate distances
             distances = self.distance_calc.neighbor_distances(atom.position, neighbor_positions, pbc_box)
-
             # Update global distance matrix
             for j_idx, j in enumerate(atom.neighbors):
                 self.global_dist_mat[idx][j] = distances[j_idx]

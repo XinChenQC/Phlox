@@ -59,7 +59,7 @@ class Config:
     # Analysis
     bond_multiplier: float = 1.5
     neighbor_cutoff: float = 10.0
-    neighbor_update_freq: int = 20  # Rebuild neighbor lists every N frames
+    neighbor_update_freq: int = 100  # Rebuild neighbor lists every N frames
     stability_time: Tuple[float, str] = (1.0, "ps")
     stability_lag: int = 10
 

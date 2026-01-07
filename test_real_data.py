@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 # Create config matching the ReaxANA inputfile
 config = Config(
-    n_cores=2,  # Use single core for testing
+    n_cores=1,  # Use single core for testing
     traj_type="xyz",
 #    traj_type="lmp",
 #    traj_files=["/home/xchen/Work/ReaxANA/ReaxANA/reax2.trj"],

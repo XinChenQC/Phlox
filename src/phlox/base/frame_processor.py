@@ -98,8 +98,11 @@ class FrameProcessor:
         # Track species IDs for this frame (for Counter)
         frame_species_ids = []
 
+        # Use fragmenter's stored atoms (which have neighbor lists preserved)
+        stored_atoms = self.fragmenter.atoms if self.fragmenter.atoms is not None else atoms
+
         for molecule in molecules:
-            self.fragmenter.update_molecule_info(molecule, atoms, pbc_box)
+            self.fragmenter.update_molecule_info(molecule, stored_atoms, pbc_box)
 
             # speciesID = "H" + molecular structure hash (hashD in ReaxANA)
             species_id = molecule.hash
@@ -149,15 +152,23 @@ class FrameProcessor:
         Based on BlockNeighborUpdate() from tool.py (lines 424-472)
 
         Args:
-            atoms: List of atoms
+            atoms: List of atoms with new positions
             pbc_box: PBC box dimensions
             cutoff: Distance cutoff for neighbors (Angstroms)
         """
         import numpy as np
         from phlox.frag.distance import DistanceCalculator
 
-        n_atoms = len(atoms)
-        positions = np.array([atom.position for atom in atoms], dtype=np.float32)
+        # Update stored atoms' positions first
+        if self.fragmenter is not None and self.fragmenter.atoms is not None:
+            for i, atom in enumerate(atoms):
+                self.fragmenter.atoms[i].position = atom.position
+            atoms_to_update = self.fragmenter.atoms
+        else:
+            atoms_to_update = atoms
+
+        n_atoms = len(atoms_to_update)
+        positions = np.array([atom.position for atom in atoms_to_update], dtype=np.float32)
 
         # Calculate distance matrix
         calc = DistanceCalculator()
@@ -166,10 +177,9 @@ class FrameProcessor:
         else:
             dist_mat = calc.pairwise_distances(positions, None)
 
-        # Update neighbor lists
+        # Update neighbor lists (only store j < i to avoid duplication)
         for i in range(n_atoms):
-            atoms[i].clear_neighbors()
+            atoms_to_update[i].clear_neighbors()
             for j in range(i):
                 if dist_mat[i, j] < cutoff:
-                    atoms[i].add_neighbor(j)
-                    atoms[j].add_neighbor(i)
+                    atoms_to_update[i].add_neighbor(j)

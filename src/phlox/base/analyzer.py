@@ -206,7 +206,7 @@ class _Worker:
                     frame_count += 1
 
                     # Update neighbor lists periodically (every 5 frames)
-                    if frame_count % 5 == 0 and self.frame_processor.fragmenter is not None:
+                    if frame_count % 100 == 0 and self.frame_processor.fragmenter is not None:
                         self.frame_processor.update_neighbor_lists(atoms, pbc_box)
 
                     if frame_count % 100 == 0:
@@ -284,7 +284,7 @@ class _Worker:
                     frame_count += 1
 
                     # Update neighbor lists periodically (every 5 frames)
-                    if frame_count % 5 == 0 and self.frame_processor.fragmenter is not None:
+                    if frame_count % 100 == 0 and self.frame_processor.fragmenter is not None:
                         self.frame_processor.update_neighbor_lists(atoms, pbc_box)
 
                     if frame_count % 100 == 0:

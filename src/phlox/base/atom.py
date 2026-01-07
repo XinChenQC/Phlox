@@ -64,4 +64,4 @@ class Atom:
         self.neighbors.clear()
 
     def __repr__(self) -> str:
-        return f"Atom({self.element}, idx={self.index}, pos={self.position})"
+        return f"Atom({self.element}, idx={self.index}, pos={self.position}, neighbors={self.neighbors})"
